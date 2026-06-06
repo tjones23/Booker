@@ -81,8 +81,24 @@ database is created and seeded automatically on first run.
   }
   ```
 
-  `ToAddress` is where intake submissions are delivered. Keep secrets out of source
-  control by using `dotnet user-secrets` or environment variables in production.
+  `ToAddress` is where intake submissions are delivered.
+
+### Keeping the recipient & secrets out of source control
+
+`appsettings.json` only holds a placeholder `ToAddress`; the real recipient and any
+SMTP credentials are supplied via **[user secrets](https://learn.microsoft.com/aspnet/core/security/app-secrets)**
+(loaded automatically in the Development environment) or environment variables, and
+override the file values at runtime:
+
+```bash
+dotnet user-secrets set "Email:ToAddress" "amani.willis96@gmail.com"
+dotnet user-secrets set "Email:Host" "smtp.gmail.com"
+dotnet user-secrets set "Email:Username" "your-account@gmail.com"
+dotnet user-secrets set "Email:Password" "your-app-password"
+```
+
+In production, set the same keys as environment variables, e.g.
+`Email__ToAddress=...` (double underscore = nested config).
 
 ## Notes / next steps for production
 
