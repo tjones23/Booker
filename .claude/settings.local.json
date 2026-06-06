@@ -17,7 +17,27 @@
       "Bash(ASPNETCORE_ENVIRONMENT=Development dotnet run --no-build)",
       "Bash(echo \"pid $!\")",
       "Bash(pkill -f \"Booker\" 2>/dev/null; sleep 1 *)",
-      "Bash(echo \"===== FAMILY CONFIRMATION EMAIL =====\" *)"
+      "Bash(echo \"===== FAMILY CONFIRMATION EMAIL =====\" *)",
+      "Bash(git checkout *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Read(//usr/local/bin/**)",
+      "Bash(command -v gh)",
+      "Read(//opt/homebrew/bin/**)",
+      "Read(//opt/homebrew/**)",
+      "Bash(env)",
+      "Bash(git credential *)",
+      "Bash(dotnet user-secrets *)",
+      "Bash(git commit --amend -m ' *)",
+      "Bash(git restore *)",
+      "Bash(perl -i -pe 's/^\\\\x{ef}\\\\x{bb}\\\\x{bf}//; s/\\\\r\\\\n/\\\\n/g' Booker.csproj)",
+      "Bash(perl -i -pe 's/\\\\n/\\\\r\\\\n/' Booker.csproj)",
+      "Bash(perl -i -0pe 's/\\(<ImplicitUsings>enable<\\\\/ImplicitUsings>\\)\\(\\\\r?\\\\n\\)/$1$2    <UserSecretsId>6364b645-c5a7-4007-9ef2-b705ae193dc5<\\\\/UserSecretsId>$2/' Booker.csproj)",
+      "Bash(git fetch *)",
+      "Bash(python3 -c 'import json,sys; d=json.load\\(sys.stdin\\); print\\(\"state:\",d[\"state\"],\"| merged:\",d[\"merged\"],\"| base:\",d[\"base\"][\"sha\"][:7],\"| head:\",d[\"head\"][\"sha\"][:7]\\)')",
+      "Bash(git cherry-pick *)",
+      "Bash(python3 -c 'import json,sys; d=json.load\\(sys.stdin\\); print\\(\"state:\",d[\"state\"],\"| merged:\",d[\"merged\"],\"| url:\",d[\"html_url\"]\\)')"
     ]
   }
 }
