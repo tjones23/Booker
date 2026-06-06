@@ -1,0 +1,124 @@
+@model HomeViewModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<section class="container mt-4">
+    <div class="hero p-4 p-md-5">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-7">
+                <span class="hero-badge px-3 py-1 d-inline-block mb-3">Now booking new students</span>
+                <h1 class="display-4 mb-3">Confident readers start here.</h1>
+                <p class="lead mb-4">
+                    One-on-one literacy and math tutoring rooted in the Science of Reading and
+                    Orton-Gillingham. Personalized, multisensory sessions that help your child
+                    fall in love with learning.
+                </p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a class="btn btn-primary btn-lg px-4" asp-controller="Intake" asp-action="Index">
+                        <i class="bi bi-calendar-check me-1"></i> Book a free assessment
+                    </a>
+                    <a class="btn btn-outline-primary btn-lg px-4" asp-controller="Services" asp-action="Index">
+                        Explore services
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5 text-center">
+                <i class="bi bi-journal-bookmark-fill text-primary" style="font-size: 11rem; opacity:.85"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container my-5">
+    <div class="text-center mb-4">
+        <h2>Tutoring services</h2>
+        <p class="text-muted">Pick the support that fits your family — book online in minutes.</p>
+    </div>
+    <div class="row g-4">
+        @foreach (var service in Model.Services)
+        {
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 lift p-3">
+                    <div class="card-body d-flex flex-column">
+                        <span class="service-icon mb-3"><i class="bi bi-@service.Icon"></i></span>
+                        <h5 class="card-title">@service.Name</h5>
+                        <p class="small text-muted flex-grow-1">@service.Tagline</p>
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <span class="price-pill px-3 py-1 small">
+                                @(service.Price == 0 ? "Free" : service.Price.ToString("C0"))
+                            </span>
+                            <span class="small text-muted">@service.DurationMinutes min</span>
+                        </div>
+                        <a class="btn btn-outline-primary btn-sm mt-3"
+                           asp-controller="Services" asp-action="Details" asp-route-slug="@service.Slug">
+                            Learn more
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<section class="bg-brand-soft py-5">
+    <div class="container">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-6">
+                <h2>Meet Ms. Amani</h2>
+                <p>
+                    Ms. Amani holds a Bachelor's in Elementary Education and a Master's
+                    in Special Education. After 13 years in the classroom, she launched
+                    Rooted Readers to give students the individualized, evidence-based
+                    literacy support they deserve.
+                </p>
+                <p class="mb-4">
+                    She's trained in Orton-Gillingham+, the Institute for Multisensory Education's
+                    reading and grammar program, and Multisensory Math — and is currently completing
+                    the Barton Reading &amp; Spelling System.
+                </p>
+                <a class="btn btn-primary" asp-controller="Home" asp-action="About">Read her story</a>
+            </div>
+            <div class="col-lg-6">
+                <div class="row g-3">
+                    <div class="col-6"><div class="card p-3 text-center"><div class="display-6 text-primary">13+</div><div class="small text-muted">Years teaching</div></div></div>
+                    <div class="col-6"><div class="card p-3 text-center"><div class="display-6 text-primary">K-4</div><div class="small text-muted">Math grades served</div></div></div>
+                    <div class="col-6"><div class="card p-3 text-center"><div class="display-6 text-primary">1:1</div><div class="small text-muted">Personalized sessions</div></div></div>
+                    <div class="col-6"><div class="card p-3 text-center"><div class="display-6 text-primary">OG</div><div class="small text-muted">Orton-Gillingham trained</div></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model.Testimonials.Any())
+{
+    <section class="container my-5">
+        <div class="text-center mb-4"><h2>What families say</h2></div>
+        <div class="row g-4">
+            @foreach (var t in Model.Testimonials)
+            {
+                <div class="col-md-4">
+                    <div class="testimonial p-4 h-100 card lift">
+                        <div class="stars mb-2">
+                            @for (int i = 0; i < t.Rating; i++) { <i class="bi bi-star-fill"></i> }
+                        </div>
+                        <p class="fst-italic">“@t.Quote”</p>
+                        <div class="mt-auto">
+                            <div class="fw-bold">@t.Author</div>
+                            <div class="small text-muted">@t.Relationship</div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+}
+
+<section class="container my-5">
+    <div class="card p-4 p-md-5 text-center bg-brand-soft">
+        <h2 class="mb-2">Ready to get started?</h2>
+        <p class="text-muted mb-4">The free 30-minute assessment is the perfect first step — no obligation.</p>
+        <div><a class="btn btn-primary btn-lg px-4" asp-controller="Booking" asp-action="Index">Book online now</a></div>
+    </div>
+</section>

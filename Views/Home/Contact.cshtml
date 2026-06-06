@@ -1,0 +1,58 @@
+@model ContactViewModel
+@{
+    ViewData["Title"] = "Contact";
+}
+
+<section class="container my-5">
+    <div class="row g-5">
+        <div class="col-lg-5">
+            <h1>Get in touch</h1>
+            <p class="text-muted">
+                Have a question before booking? Send a note and Ms. Amani will reply within one
+                business day. Prefer to book directly? You can do that online any time.
+            </p>
+            <ul class="list-unstyled mt-4">
+                <li class="mb-3"><i class="bi bi-envelope-fill text-primary me-2"></i>hello@rootedreaders.com</li>
+                <li class="mb-3"><i class="bi bi-telephone-fill text-primary me-2"></i>(970) 590-1067</li>
+                <li class="mb-3"><i class="bi bi-clock-fill text-primary me-2"></i>Mon–Sat, 9:00 AM – 5:00 PM</li>
+            </ul>
+            <a class="btn btn-outline-primary" asp-controller="Booking" asp-action="Index">
+                <i class="bi bi-calendar-check me-1"></i> Book a session instead
+            </a>
+        </div>
+        <div class="col-lg-7">
+            <div class="card p-4">
+                <form asp-action="Contact" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger small"></div>
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Phone" class="form-label"></label>
+                            <input asp-for="Phone" class="form-control" />
+                            <span asp-validation-for="Phone" class="text-danger small"></span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Message" class="form-label"></label>
+                        <textarea asp-for="Message" class="form-control" rows="5"></textarea>
+                        <span asp-validation-for="Message" class="text-danger small"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary px-4">Send message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

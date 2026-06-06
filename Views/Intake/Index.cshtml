@@ -1,0 +1,256 @@
+@model IntakeViewModel
+@{
+    ViewData["Title"] = "Family Intake Form";
+
+    var concernOptions = new[]
+    {
+        "Letter / sound recognition", "Fluency", "Decoding",
+        "Comprehension", "Spelling", "Reading avoidance / anxiety"
+    };
+    var days = new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+    .rr-wrap {
+        max-width: 660px; margin: 2rem auto; background: #fff; border-radius: 16px;
+        border: 0.5px solid #C8E8DC; padding: 0 2rem 2.5rem; box-shadow: 0 4px 24px rgba(15,110,86,.07);
+        font-family: 'DM Sans', sans-serif; color: #1a1a1a;
+    }
+    .rr-header { text-align: center; padding: 2.5rem 1rem 1.75rem; border-bottom: .5px solid #C8E8DC; margin-bottom: 2rem; }
+    .rr-logo-mark { width: 56px; height: 56px; background: #E1F5EE; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+    .rr-header h1 { font-family: 'Lora', serif; font-size: 24px; font-weight: 500; color: #0F6E56; margin-bottom: 5px; }
+    .rr-header p { font-family: 'Lora', serif; font-style: italic; font-size: 14px; color: #5a7a6e; }
+    .rr-section { margin-bottom: 2rem; }
+    .rr-section-title { font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: #0F6E56; margin-bottom: 1rem; padding-bottom: 6px; border-bottom: 1.5px solid #9FE1CB; }
+    .rr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .rr-grid-3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px; }
+    @@media (max-width: 520px) { .rr-grid, .rr-grid-3 { grid-template-columns: 1fr; } .rr-wrap { padding: 0 1.25rem 2rem; } }
+    .rr-field { display: flex; flex-direction: column; gap: 5px; }
+    .rr-field.full { grid-column: 1 / -1; }
+    .rr-field label { font-size: 12px; font-weight: 500; color: #4a6b5f; }
+    .rr-field input[type="text"], .rr-field input[type="email"], .rr-field input[type="tel"],
+    .rr-field input[type="date"], .rr-field select, .rr-field textarea {
+        font-family: 'DM Sans', sans-serif; font-size: 14px; padding: 9px 11px; border: .5px solid #b0cfbf;
+        border-radius: 8px; background: #fff; color: #1a1a1a; width: 100%; outline: none;
+        transition: border-color .15s, box-shadow .15s;
+    }
+    .rr-field input:focus, .rr-field select:focus, .rr-field textarea:focus { border-color: #1D9E75; box-shadow: 0 0 0 3px rgba(29,158,117,.12); }
+    .rr-field textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+    .rr-checkgroup { display: grid; grid-template-columns: 1fr 1fr; gap: 7px 16px; margin-top: 6px; }
+    @@media (max-width: 420px) { .rr-checkgroup { grid-template-columns: 1fr; } }
+    .rr-check { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; color: #1a1a1a; }
+    .rr-check input[type="checkbox"] { width: 15px; height: 15px; accent-color: #1D9E75; cursor: pointer; flex-shrink: 0; }
+    .rr-radio-group { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 6px; }
+    .rr-radio { display: flex; align-items: center; gap: 7px; font-size: 13px; cursor: pointer; color: #1a1a1a; }
+    .rr-radio input[type="radio"] { width: 15px; height: 15px; accent-color: #1D9E75; cursor: pointer; flex-shrink: 0; }
+    .rr-note { font-size: 11px; color: #7a9a8a; font-style: italic; margin-top: 4px; }
+    .rr-spacer { margin-top: 14px; }
+    .rr-days { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 6px; }
+    .rr-day-input { display: none; }
+    .rr-day-label { padding: 5px 14px; border: .5px solid #b0cfbf; border-radius: 999px; font-size: 12px; cursor: pointer; color: #4a6b5f; background: #fff; transition: background .12s, border-color .12s, color .12s; user-select: none; }
+    .rr-day-input:checked + .rr-day-label { background: #E1F5EE; color: #0F6E56; border-color: #5DCAA5; font-weight: 500; }
+    .rr-submit { width: 100%; padding: 13px; background: #1D9E75; color: #E1F5EE; border: none; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; margin-top: .5rem; letter-spacing: .02em; transition: background .15s; }
+    .rr-submit:hover { background: #0F6E56; }
+    .rr-submit:active { background: #085041; }
+    .rr-footer { text-align: center; font-size: 11px; color: #7a9a8a; margin-top: 1rem; }
+    .rr-validation { color: #b3261e; font-size: 12px; }
+    .rr-validation ul { margin: 0; padding-left: 1.1rem; }
+</style>
+
+<div class="rr-wrap">
+    <div class="rr-header">
+        <div class="rr-logo-mark">
+            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M15 4 C15 4 8 11 8 18 C8 22.5 11.5 26 15 26 C18.5 26 22 22.5 22 18 C22 11 15 4 15 4Z" fill="#1D9E75" opacity="0.75" />
+                <path d="M15 11 C15 11 10.5 15.5 10.5 19.5 C10.5 22.5 12.5 24.5 15 25" stroke="#085041" stroke-width="1.2" fill="none" stroke-linecap="round" />
+                <line x1="15" y1="26" x2="15" y2="29.5" stroke="#085041" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+        </div>
+        <h1>Rooted Readers</h1>
+        <p>Nurturing the reader in every child</p>
+    </div>
+
+    <form asp-action="Index" method="post" novalidate>
+        <div asp-validation-summary="All" class="rr-validation rr-spacer"></div>
+
+        <!-- Child's Information -->
+        <div class="rr-section">
+            <div class="rr-section-title">Child's information</div>
+            <div class="rr-grid-3">
+                <div class="rr-field">
+                    <label asp-for="ChildName">Child's full name</label>
+                    <input asp-for="ChildName" type="text" placeholder="First and last name" required />
+                </div>
+                <div class="rr-field">
+                    <label asp-for="DateOfBirth">Date of birth</label>
+                    <input asp-for="DateOfBirth" type="date" />
+                </div>
+                <div class="rr-field">
+                    <label asp-for="Grade">Current grade</label>
+                    <select asp-for="Grade">
+                        <option value="">Select</option>
+                        <option>Kindergarten</option>
+                        <option>1st grade</option>
+                        <option>2nd grade</option>
+                        <option>3rd grade</option>
+                        <option>4th grade</option>
+                        <option>5th grade</option>
+                    </select>
+                </div>
+            </div>
+            <div class="rr-spacer">
+                <div class="rr-field">
+                    <label asp-for="School">Current school</label>
+                    <input asp-for="School" type="text" placeholder="School name" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Parent / Guardian Information -->
+        <div class="rr-section">
+            <div class="rr-section-title">Parent / guardian information</div>
+            <div class="rr-grid">
+                <div class="rr-field">
+                    <label asp-for="ParentName">Full name</label>
+                    <input asp-for="ParentName" type="text" placeholder="Your name" required />
+                </div>
+                <div class="rr-field">
+                    <label asp-for="Relationship">Relationship to child</label>
+                    <select asp-for="Relationship">
+                        <option value="">Select</option>
+                        <option>Parent</option>
+                        <option>Guardian</option>
+                        <option>Grandparent</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div class="rr-field">
+                    <label asp-for="Phone">Phone number</label>
+                    <input asp-for="Phone" type="tel" placeholder="(720) 000-0000" />
+                </div>
+                <div class="rr-field">
+                    <label asp-for="Email">Email address</label>
+                    <input asp-for="Email" type="email" placeholder="you@email.com" required />
+                </div>
+                <div class="rr-field full">
+                    <label>Preferred contact method</label>
+                    <div class="rr-radio-group">
+                        <label class="rr-radio"><input asp-for="ContactMethod" type="radio" value="Phone call" /> Phone call</label>
+                        <label class="rr-radio"><input asp-for="ContactMethod" type="radio" value="Text" /> Text</label>
+                        <label class="rr-radio"><input asp-for="ContactMethod" type="radio" value="Email" /> Email</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Your Reader -->
+        <div class="rr-section">
+            <div class="rr-section-title">About your reader</div>
+
+            <div class="rr-field" style="margin-bottom: 16px;">
+                <label>Main concerns <span style="font-weight:400;">(select all that apply)</span></label>
+                <div class="rr-checkgroup">
+                    @foreach (var c in concernOptions)
+                    {
+                        <label class="rr-check">
+                            <input type="checkbox" name="Concerns" value="@c" checked="@Model.Concerns.Contains(c)" /> @c
+                        </label>
+                    }
+                </div>
+                <div class="rr-spacer">
+                    <div class="rr-field">
+                        <label asp-for="OtherConcerns">Other concerns</label>
+                        <input asp-for="OtherConcerns" type="text" placeholder="Describe any other concerns..." />
+                    </div>
+                </div>
+            </div>
+
+            <div class="rr-field" style="margin-bottom: 16px;">
+                <label>How long have you noticed these challenges?</label>
+                <div class="rr-radio-group">
+                    <label class="rr-radio"><input asp-for="Duration" type="radio" value="Less than 6 months" /> Less than 6 months</label>
+                    <label class="rr-radio"><input asp-for="Duration" type="radio" value="6–12 months" /> 6–12 months</label>
+                    <label class="rr-radio"><input asp-for="Duration" type="radio" value="1–2 years" /> 1–2 years</label>
+                    <label class="rr-radio"><input asp-for="Duration" type="radio" value="2+ years" /> 2+ years</label>
+                </div>
+            </div>
+
+            <div class="rr-field" style="margin-bottom: 16px;">
+                <label>Has your child been evaluated for a learning difference? <span style="font-weight:400;">(dyslexia, IEP, 504, speech/language)</span></label>
+                <div class="rr-radio-group">
+                    <label class="rr-radio"><input asp-for="Evaluated" type="radio" value="No" /> No</label>
+                    <label class="rr-radio"><input asp-for="Evaluated" type="radio" value="Yes" /> Yes</label>
+                </div>
+                <input asp-for="EvaluatedDetail" type="text" placeholder="Please describe..." style="margin-top: 8px;" />
+            </div>
+
+            <div class="rr-field" style="margin-bottom: 16px;">
+                <label>Is your child currently receiving other reading support?</label>
+                <div class="rr-radio-group">
+                    <label class="rr-radio"><input asp-for="OtherSupport" type="radio" value="No" /> No</label>
+                    <label class="rr-radio"><input asp-for="OtherSupport" type="radio" value="Yes" /> Yes</label>
+                </div>
+                <input asp-for="OtherSupportDetail" type="text" placeholder="At school or elsewhere — please describe..." style="margin-top: 8px;" />
+            </div>
+
+            <div class="rr-field">
+                <label asp-for="Interests">What does your child enjoy? <span style="font-weight:400;">(interests, hobbies, favorite topics)</span></label>
+                <input asp-for="Interests" type="text" placeholder="e.g. dinosaurs, soccer, space, drawing..." />
+                <div class="rr-note">This helps personalize sessions with books and materials your child will actually love.</div>
+            </div>
+        </div>
+
+        <!-- Scheduling -->
+        <div class="rr-section">
+            <div class="rr-section-title">Scheduling preferences</div>
+
+            <div class="rr-field" style="margin-bottom: 16px;">
+                <label>Preferred days</label>
+                <div class="rr-days">
+                    @foreach (var d in days)
+                    {
+                        var id = "d-" + d.ToLower();
+                        <input type="checkbox" class="rr-day-input" id="@id" name="Days" value="@d" checked="@Model.Days.Contains(d)" />
+                        <label class="rr-day-label" for="@id">@d.Substring(0, 3)</label>
+                    }
+                </div>
+            </div>
+
+            <div class="rr-grid">
+                <div class="rr-field">
+                    <label>Preferred time of day</label>
+                    <div class="rr-radio-group">
+                        <label class="rr-radio"><input asp-for="TimeOfDay" type="radio" value="Morning" /> Morning</label>
+                        <label class="rr-radio"><input asp-for="TimeOfDay" type="radio" value="Afternoon" /> Afternoon</label>
+                        <label class="rr-radio"><input asp-for="TimeOfDay" type="radio" value="Evening" /> Evening</label>
+                    </div>
+                </div>
+                <div class="rr-field">
+                    <label>Session format</label>
+                    <div class="rr-radio-group">
+                        <label class="rr-radio"><input asp-for="Format" type="radio" value="In-person" /> In-person</label>
+                        <label class="rr-radio"><input asp-for="Format" type="radio" value="Online" /> Online</label>
+                        <label class="rr-radio"><input asp-for="Format" type="radio" value="No preference" /> No preference</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Anything Else -->
+        <div class="rr-section">
+            <div class="rr-section-title">Anything else?</div>
+            <div class="rr-field">
+                <label asp-for="Additional">Is there anything else you'd like me to know before our consultation?</label>
+                <textarea asp-for="Additional" placeholder="Share anything that feels important..."></textarea>
+            </div>
+        </div>
+
+        <button type="submit" class="rr-submit">Submit intake form</button>
+        <p class="rr-footer">Your information is kept private and used only to prepare for your free consultation.</p>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

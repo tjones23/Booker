@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet new *)",
+      "Bash(dotnet add *)",
+      "Bash(dotnet build *)",
+      "Bash(ASPNETCORE_ENVIRONMENT=Development ASPNETCORE_URLS=http://localhost:5187 dotnet run --no-build)",
+      "Bash(echo \"started pid $!\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5187/)",
+      "Bash(cat /tmp/booker.log)",
+      "Read(//usr/bin/**)",
+      "Bash(command -v wget)",
+      "Bash(pkill -f \"Booker\")",
+      "Bash(rm -f /Users/tonyjones/Documents/Dev/Booker/booker.db*)",
+      "Bash(rm -f booker.db* && dotnet build 2>&1 | tail -6)",
+      "Bash(rm -f booker.db*)",
+      "Bash(ASPNETCORE_ENVIRONMENT=Development dotnet run --no-build)",
+      "Bash(echo \"pid $!\")",
+      "Bash(pkill -f \"Booker\" 2>/dev/null; sleep 1 *)",
+      "Bash(echo \"===== FAMILY CONFIRMATION EMAIL =====\" *)"
+    ]
+  }
+}

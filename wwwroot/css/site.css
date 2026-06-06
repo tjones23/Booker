@@ -1,0 +1,86 @@
+:root {
+  --brand: #5b7f6e;        /* sage green */
+  --brand-dark: #3f5d4f;
+  --accent: #e8a87c;       /* warm peach */
+  --cream: #faf6ef;
+  --ink: #2f3a34;
+}
+
+html { font-size: 14px; position: relative; min-height: 100%; }
+@media (min-width: 768px) { html { font-size: 16px; } }
+
+body {
+  font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+  color: var(--ink);
+  background: var(--cream);
+}
+
+h1, h2, h3, h4, h5, .navbar-brand, .display-4, .display-5 {
+  font-family: 'Fraunces', Georgia, serif;
+}
+
+/* Brand color overrides for Bootstrap primary */
+.btn-primary {
+  --bs-btn-bg: var(--brand);
+  --bs-btn-border-color: var(--brand);
+  --bs-btn-hover-bg: var(--brand-dark);
+  --bs-btn-hover-border-color: var(--brand-dark);
+  --bs-btn-active-bg: var(--brand-dark);
+}
+.btn-outline-primary {
+  --bs-btn-color: var(--brand);
+  --bs-btn-border-color: var(--brand);
+  --bs-btn-hover-bg: var(--brand);
+  --bs-btn-hover-border-color: var(--brand);
+}
+.text-primary { color: var(--brand) !important; }
+.bg-brand-soft { background: #eef3ef; }
+a { color: var(--brand-dark); }
+
+.navbar-brand { color: var(--brand-dark); }
+.nav-link { font-weight: 600; }
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, #eef3ef 0%, #faf6ef 100%);
+  border-radius: 1.5rem;
+}
+.hero-badge {
+  background: rgba(232, 168, 124, .18);
+  color: #b56f43;
+  font-weight: 700;
+  border-radius: 999px;
+}
+
+/* Service / content cards */
+.card {
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 6px 24px rgba(63, 93, 79, .07);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.card.lift:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(63, 93, 79, .14); }
+
+.service-icon {
+  width: 56px; height: 56px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 16px;
+  background: #eef3ef; color: var(--brand-dark);
+  font-size: 1.5rem;
+}
+
+.price-pill {
+  background: var(--brand-dark); color: #fff;
+  border-radius: 999px; font-weight: 700;
+}
+
+/* Booking slot buttons */
+.slot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: .6rem; }
+.day-pill { white-space: nowrap; }
+
+/* Testimonials */
+.testimonial { background: #fff; border-radius: 1rem; }
+.stars { color: var(--accent); }
+
+.footer a:hover { text-decoration: underline; }
+.btn-link.nav-link { color: var(--bs-nav-link-color); padding: .5rem; }

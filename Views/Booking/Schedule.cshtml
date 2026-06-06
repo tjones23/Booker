@@ -1,0 +1,66 @@
+@model ScheduleViewModel
+@{
+    ViewData["Title"] = "Pick a time";
+}
+
+<section class="container my-5" style="max-width: 820px;">
+    <div class="text-center mb-3">
+        <span class="hero-badge px-3 py-1 d-inline-block mb-2">Step 2 of 3</span>
+        <h1>Pick a day &amp; time</h1>
+        <p class="text-muted mb-0">
+            @Model.Service.Name · @Model.Service.DurationMinutes min ·
+            @(Model.Service.Price == 0 ? "Free" : Model.Service.Price.ToString("C0"))
+        </p>
+    </div>
+
+    <div class="card p-4">
+        @if (!Model.UpcomingDays.Any())
+        {
+            <div class="alert alert-warning mb-0">
+                No open times in the next few weeks. Please
+                <a asp-controller="Home" asp-action="Contact">contact Ms. Amani</a> to arrange a session.
+            </div>
+        }
+        else
+        {
+            <h6 class="text-muted text-uppercase small">Available days</h6>
+            <div class="d-flex flex-wrap gap-2 mb-4">
+                @foreach (var day in Model.UpcomingDays)
+                {
+                    var isActive = day == Model.SelectedDate;
+                    <a class="btn day-pill @(isActive ? "btn-primary" : "btn-outline-primary") btn-sm"
+                       asp-action="Schedule" asp-route-serviceId="@Model.Service.Id" asp-route-date="@day.ToString("yyyy-MM-dd")">
+                        @day.ToString("ddd, MMM d")
+                    </a>
+                }
+            </div>
+
+            <h6 class="text-muted text-uppercase small">
+                Times for @Model.SelectedDate.ToString("dddd, MMMM d")
+            </h6>
+            @if (!Model.AvailableSlots.Any())
+            {
+                <p class="text-muted">No open times on this day — try another.</p>
+            }
+            else
+            {
+                <div class="slot-grid">
+                    @foreach (var slot in Model.AvailableSlots)
+                    {
+                        <a class="btn btn-outline-primary"
+                           asp-action="Details" asp-route-serviceId="@Model.Service.Id"
+                           asp-route-start="@slot.ToString("yyyy-MM-ddTHH:mm:ss")">
+                            @slot.ToString("h:mm tt")
+                        </a>
+                    }
+                </div>
+            }
+        }
+    </div>
+
+    <div class="mt-3">
+        <a class="small text-decoration-none" asp-action="Index">
+            <i class="bi bi-arrow-left"></i> Choose a different service
+        </a>
+    </div>
+</section>

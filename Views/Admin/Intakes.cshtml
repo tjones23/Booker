@@ -1,0 +1,65 @@
+@model List<IntakeSubmission>
+@{
+    ViewData["Title"] = "Intake submissions";
+}
+
+<section class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Family intakes</h1>
+        <a class="btn btn-outline-primary btn-sm" asp-action="Index">← Bookings</a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="card p-4 text-center text-muted">No intake submissions yet.</div>
+    }
+    else
+    {
+        <div class="row g-3">
+            @foreach (var i in Model)
+            {
+                <div class="col-12">
+                    <div class="card p-4">
+                        <div class="d-flex justify-content-between flex-wrap gap-2">
+                            <div>
+                                <h5 class="mb-0">@i.ChildName
+                                    @if (!string.IsNullOrEmpty(i.Grade)) { <span class="text-muted fs-6">· @i.Grade</span> }
+                                </h5>
+                                <div class="small text-muted">Submitted @i.CreatedAt.ToLocalTime().ToString("MMM d, yyyy h:mm tt")</div>
+                            </div>
+                            <div class="text-end small">
+                                <div class="fw-semibold">@i.ParentName <span class="text-muted">(@i.Relationship)</span></div>
+                                <div>@i.Email @(string.IsNullOrEmpty(i.Phone) ? "" : "· " + i.Phone)</div>
+                                @if (!string.IsNullOrEmpty(i.ContactMethod)) { <div class="text-muted">Prefers: @i.ContactMethod</div> }
+                            </div>
+                        </div>
+                        <hr class="my-3" />
+                        <div class="row small g-3">
+                            <div class="col-md-6">
+                                <div class="text-muted text-uppercase" style="font-size:11px">About the reader</div>
+                                @if (!string.IsNullOrEmpty(i.Concerns)) { <div><strong>Concerns:</strong> @i.Concerns</div> }
+                                @if (!string.IsNullOrEmpty(i.OtherConcerns)) { <div><strong>Other:</strong> @i.OtherConcerns</div> }
+                                @if (!string.IsNullOrEmpty(i.Duration)) { <div><strong>Duration:</strong> @i.Duration</div> }
+                                @if (!string.IsNullOrEmpty(i.Evaluated)) { <div><strong>Evaluated:</strong> @i.Evaluated @i.EvaluatedDetail</div> }
+                                @if (!string.IsNullOrEmpty(i.OtherSupport)) { <div><strong>Other support:</strong> @i.OtherSupport @i.OtherSupportDetail</div> }
+                                @if (!string.IsNullOrEmpty(i.Interests)) { <div><strong>Interests:</strong> @i.Interests</div> }
+                            </div>
+                            <div class="col-md-6">
+                                <div class="text-muted text-uppercase" style="font-size:11px">Scheduling</div>
+                                @if (!string.IsNullOrEmpty(i.Days)) { <div><strong>Days:</strong> @i.Days</div> }
+                                @if (!string.IsNullOrEmpty(i.TimeOfDay)) { <div><strong>Time:</strong> @i.TimeOfDay</div> }
+                                @if (!string.IsNullOrEmpty(i.Format)) { <div><strong>Format:</strong> @i.Format</div> }
+                                @if (i.DateOfBirth.HasValue) { <div><strong>DOB:</strong> @i.DateOfBirth.Value.ToString("MMM d, yyyy")</div> }
+                                @if (!string.IsNullOrEmpty(i.School)) { <div><strong>School:</strong> @i.School</div> }
+                            </div>
+                            @if (!string.IsNullOrEmpty(i.Additional))
+                            {
+                                <div class="col-12"><div class="text-muted text-uppercase" style="font-size:11px">Notes</div><em>@i.Additional</em></div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>

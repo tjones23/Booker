@@ -1,0 +1,97 @@
+@model List<Booking>
+@{
+    ViewData["Title"] = "Dashboard";
+    var statusFilter = ViewBag.StatusFilter as BookingStatus?;
+
+    string Badge(BookingStatus s) => s switch
+    {
+        BookingStatus.Confirmed => "bg-success",
+        BookingStatus.Pending => "bg-warning text-dark",
+        BookingStatus.Completed => "bg-secondary",
+        BookingStatus.Cancelled => "bg-danger",
+        _ => "bg-light text-dark"
+    };
+}
+
+<section class="container my-5">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+        <div class="d-flex align-items-center gap-3">
+            <h1 class="mb-0">Bookings</h1>
+            <a class="btn btn-outline-primary btn-sm" asp-action="Intakes">Family intakes →</a>
+        </div>
+        <div class="d-flex gap-3">
+            <div class="card px-3 py-2 text-center">
+                <div class="h4 mb-0 text-primary">@ViewBag.PendingCount</div>
+                <div class="small text-muted">Pending</div>
+            </div>
+            <div class="card px-3 py-2 text-center">
+                <div class="h4 mb-0 text-primary">@ViewBag.UpcomingCount</div>
+                <div class="small text-muted">Upcoming</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="btn-group btn-group-sm mb-3" role="group">
+        <a class="btn @(statusFilter == null ? "btn-primary" : "btn-outline-primary")" asp-action="Index">All</a>
+        @foreach (var s in Enum.GetValues<BookingStatus>())
+        {
+            <a class="btn @(statusFilter == s ? "btn-primary" : "btn-outline-primary")"
+               asp-action="Index" asp-route-status="@s">@s</a>
+        }
+    </div>
+
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>When</th>
+                        <th>Service</th>
+                        <th>Student</th>
+                        <th>Parent / contact</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="6" class="text-center text-muted py-4">No bookings to show.</td></tr>
+                }
+                @foreach (var b in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="fw-semibold">@b.StartTime.ToString("MMM d")</div>
+                            <div class="small text-muted">@b.StartTime.ToString("h:mm tt")</div>
+                        </td>
+                        <td>@b.Service?.Name</td>
+                        <td>
+                            @b.StudentName
+                            @if (!string.IsNullOrEmpty(b.StudentGrade)) { <div class="small text-muted">@b.StudentGrade</div> }
+                        </td>
+                        <td>
+                            <div>@b.ParentName</div>
+                            <div class="small text-muted">@b.Email · @b.Phone</div>
+                            @if (!string.IsNullOrEmpty(b.Notes)) { <div class="small fst-italic text-muted">“@b.Notes”</div> }
+                        </td>
+                        <td><span class="badge @Badge(b.Status)">@b.Status</span></td>
+                        <td class="text-end">
+                            <form asp-action="UpdateStatus" method="post" class="d-inline-flex gap-1">
+                                <input type="hidden" name="id" value="@b.Id" />
+                                <select name="status" class="form-select form-select-sm" style="width:auto">
+                                    @foreach (var s in Enum.GetValues<BookingStatus>())
+                                    {
+                                        <option value="@s" selected="@(s == b.Status)">@s</option>
+                                    }
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

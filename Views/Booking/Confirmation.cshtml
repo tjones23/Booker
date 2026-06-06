@@ -1,0 +1,40 @@
+@model Booking
+@{
+    ViewData["Title"] = "Booking confirmed";
+}
+
+<section class="container my-5 text-center" style="max-width: 620px;">
+    <div class="card p-4 p-md-5">
+        <div class="mb-3">
+            <i class="bi bi-check-circle-fill text-primary" style="font-size: 4rem;"></i>
+        </div>
+        <h1>You're booked!</h1>
+        <p class="text-muted">
+            @if (Model.Status == BookingStatus.Confirmed)
+            {
+                <text>Your session is confirmed. A confirmation has been sent to <strong>@Model.Email</strong>.</text>
+            }
+            else
+            {
+                <text>Thanks, @Model.ParentName! Your request has been received. Ms. Amani will confirm shortly at <strong>@Model.Email</strong>.</text>
+            }
+        </p>
+
+        <div class="bg-brand-soft rounded p-4 text-start my-3">
+            <div class="row g-2">
+                <div class="col-4 text-muted small">Service</div>
+                <div class="col-8 fw-semibold">@Model.Service?.Name</div>
+                <div class="col-4 text-muted small">Student</div>
+                <div class="col-8 fw-semibold">@Model.StudentName</div>
+                <div class="col-4 text-muted small">When</div>
+                <div class="col-8 fw-semibold">
+                    @Model.StartTime.ToString("dddd, MMMM d") at @Model.StartTime.ToString("h:mm tt")
+                </div>
+                <div class="col-4 text-muted small">Confirmation #</div>
+                <div class="col-8 fw-semibold">#@Model.Id</div>
+            </div>
+        </div>
+
+        <a class="btn btn-outline-primary" asp-controller="Home" asp-action="Index">Back to home</a>
+    </div>
+</section>

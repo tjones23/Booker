@@ -1,0 +1,35 @@
+@model Service
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<section class="container my-5" style="max-width: 760px;">
+    <a class="small text-decoration-none" asp-controller="Services" asp-action="Index">
+        <i class="bi bi-arrow-left"></i> All services
+    </a>
+    <div class="card p-4 p-md-5 mt-3">
+        <span class="service-icon mb-3"><i class="bi bi-@Model.Icon"></i></span>
+        <h1>@Model.Name</h1>
+        <p class="lead text-muted">@Model.Tagline</p>
+        <p>@Model.Description</p>
+
+        <div class="row text-center my-4">
+            <div class="col-6">
+                <div class="bg-brand-soft rounded p-3">
+                    <div class="h4 mb-0">@(Model.Price == 0 ? "Free" : Model.Price.ToString("C0"))</div>
+                    <div class="small text-muted">per session</div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="bg-brand-soft rounded p-3">
+                    <div class="h4 mb-0">@Model.DurationMinutes min</div>
+                    <div class="small text-muted">session length</div>
+                </div>
+            </div>
+        </div>
+
+        <a class="btn btn-primary btn-lg" asp-controller="Booking" asp-action="Schedule" asp-route-serviceId="@Model.Id">
+            <i class="bi bi-calendar-check me-1"></i> Check availability &amp; book
+        </a>
+    </div>
+</section>

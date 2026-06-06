@@ -1,0 +1,80 @@
+@model BookingDetailsViewModel
+@{
+    ViewData["Title"] = "Your details";
+}
+
+<section class="container my-5" style="max-width: 720px;">
+    <div class="text-center mb-3">
+        <span class="hero-badge px-3 py-1 d-inline-block mb-2">Step 3 of 3</span>
+        <h1>Almost there</h1>
+    </div>
+
+    <div class="card p-4 mb-4 bg-brand-soft">
+        <div class="d-flex justify-content-between flex-wrap">
+            <div>
+                <div class="fw-bold">@Model.Service?.Name</div>
+                <div class="text-muted">
+                    <i class="bi bi-calendar-event me-1"></i>@Model.StartTime.ToString("dddd, MMMM d")
+                    · <i class="bi bi-clock me-1"></i>@Model.StartTime.ToString("h:mm tt")
+                </div>
+            </div>
+            <div class="price-pill px-3 py-1 align-self-center">
+                @(Model.Service?.Price == 0 ? "Free" : Model.Service?.Price.ToString("C0"))
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-4">
+        <form asp-action="Details" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger small"></div>
+            <input type="hidden" asp-for="ServiceId" />
+            <input type="hidden" asp-for="StartTime" />
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="ParentName" class="form-label"></label>
+                    <input asp-for="ParentName" class="form-control" />
+                    <span asp-validation-for="ParentName" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="StudentName" class="form-label"></label>
+                    <input asp-for="StudentName" class="form-control" />
+                    <span asp-validation-for="StudentName" class="text-danger small"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Phone" class="form-label"></label>
+                    <input asp-for="Phone" class="form-control" />
+                    <span asp-validation-for="Phone" class="text-danger small"></span>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label asp-for="StudentGrade" class="form-label"></label>
+                <input asp-for="StudentGrade" class="form-control" placeholder="e.g. 2nd grade" />
+            </div>
+            <div class="mb-3">
+                <label asp-for="Notes" class="form-label"></label>
+                <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <a class="small text-decoration-none"
+                   asp-action="Schedule" asp-route-serviceId="@Model.ServiceId"
+                   asp-route-date="@DateOnly.FromDateTime(Model.StartTime).ToString("yyyy-MM-dd")">
+                    <i class="bi bi-arrow-left"></i> Back to times
+                </a>
+                <button type="submit" class="btn btn-primary btn-lg px-4">Confirm booking</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
