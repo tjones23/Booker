@@ -15,8 +15,12 @@
     <header>
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm sticky-top">
             <div class="container">
-                <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">
-                    <i class="bi bi-book-half text-primary me-1"></i>Rooted Readers
+                <a class="navbar-brand fw-bold d-flex align-items-center lh-1 py-1" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/logo.png" alt="Rooted Readers" height="44" class="me-2" />
+                    <span class="d-flex flex-column">
+                        <span>Rooted Readers</span>
+                        <small class="fw-normal text-muted" style="font-size: .7rem;">Grounded in Science. Grown with Care.</small>
+                    </span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
                         aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">

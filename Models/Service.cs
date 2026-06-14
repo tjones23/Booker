@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Booker.Models;
 
@@ -26,9 +27,15 @@ public class Service
     [Range(15, 240)]
     public int DurationMinutes { get; set; } = 60;
 
-    [Range(0, 1000)]
+    [Range(0, 2000)]
     [DataType(DataType.Currency)]
     public decimal Price { get; set; }
+
+    /// <summary>
+    /// Number of sessions included per month. 0 means a single/drop-in offering
+    /// (e.g. the free assessment); greater than 0 means a recurring monthly package.
+    /// </summary>
+    public int SessionsPerMonth { get; set; }
 
     /// <summary>Bootstrap icon name shown on the service card.</summary>
     [StringLength(50)]
@@ -40,4 +47,18 @@ public class Service
     public bool IsActive { get; set; } = true;
 
     public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+
+    /// <summary>Price formatted for display, e.g. "Free", "$380/mo", or "$65".</summary>
+    [NotMapped]
+    public string PriceDisplay =>
+        Price == 0 ? "Free"
+        : SessionsPerMonth > 0 ? $"{Price:C0}/mo"
+        : Price.ToString("C0");
+
+    /// <summary>Session cadence, e.g. "4 × 60-min sessions / month" or "30 min".</summary>
+    [NotMapped]
+    public string CadenceDisplay =>
+        SessionsPerMonth > 0
+            ? $"{SessionsPerMonth} × {DurationMinutes}-min sessions / month"
+            : $"{DurationMinutes} min";
 }

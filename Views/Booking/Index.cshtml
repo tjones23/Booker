@@ -21,9 +21,7 @@
                         <h5>@service.Name</h5>
                         <p class="small text-muted flex-grow-1">@service.Tagline</p>
                         <div class="d-flex justify-content-between align-items-center">
-                            <span class="price-pill px-3 py-1 small">
-                                @(service.Price == 0 ? "Free" : service.Price.ToString("C0"))
-                            </span>
+                            <span class="price-pill px-3 py-1 small">@service.PriceDisplay</span>
                             <span class="small text-muted">@service.DurationMinutes min</span>
                         </div>
                     </div>

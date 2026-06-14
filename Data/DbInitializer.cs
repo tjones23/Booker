@@ -20,7 +20,8 @@ public static class DbInitializer
                         + "phonemic awareness, phonics, fluency, spelling, and writing. Ideal for "
                         + "students who are struggling with reading or who want to accelerate.",
                     DurationMinutes = 60,
-                    Price = 65m,
+                    Price = 380m,
+                    SessionsPerMonth = 4,
                     Icon = "book-half",
                     SortOrder = 1
                 },
@@ -33,7 +34,8 @@ public static class DbInitializer
                         + "you as the educator, so you can confidently carry the Science of Reading "
                         + "methodology through the rest of your week.",
                     DurationMinutes = 60,
-                    Price = 70m,
+                    Price = 400m,
+                    SessionsPerMonth = 4,
                     Icon = "house-heart",
                     SortOrder = 2
                 },
@@ -45,8 +47,9 @@ public static class DbInitializer
                     Description = "Multisensory math instruction that emphasizes concrete, hands-on "
                         + "learning to build number sense and confidence for kindergarten through "
                         + "fourth grade.",
-                    DurationMinutes = 45,
-                    Price = 55m,
+                    DurationMinutes = 60,
+                    Price = 370m,
+                    SessionsPerMonth = 4,
                     Icon = "calculator",
                     SortOrder = 3
                 },

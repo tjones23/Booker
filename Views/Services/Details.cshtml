@@ -16,14 +16,22 @@
         <div class="row text-center my-4">
             <div class="col-6">
                 <div class="bg-brand-soft rounded p-3">
-                    <div class="h4 mb-0">@(Model.Price == 0 ? "Free" : Model.Price.ToString("C0"))</div>
-                    <div class="small text-muted">per session</div>
+                    <div class="h4 mb-0">@Model.PriceDisplay</div>
+                    <div class="small text-muted">@(Model.SessionsPerMonth > 0 ? "per month" : "per session")</div>
                 </div>
             </div>
             <div class="col-6">
                 <div class="bg-brand-soft rounded p-3">
-                    <div class="h4 mb-0">@Model.DurationMinutes min</div>
-                    <div class="small text-muted">session length</div>
+                    @if (Model.SessionsPerMonth > 0)
+                    {
+                        <div class="h4 mb-0">@Model.SessionsPerMonth × @Model.DurationMinutes min</div>
+                        <div class="small text-muted">sessions / month</div>
+                    }
+                    else
+                    {
+                        <div class="h4 mb-0">@Model.DurationMinutes min</div>
+                        <div class="small text-muted">session length</div>
+                    }
                 </div>
             </div>
         </div>

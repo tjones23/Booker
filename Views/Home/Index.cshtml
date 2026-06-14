@@ -8,7 +8,7 @@
         <div class="row align-items-center g-4">
             <div class="col-lg-7">
                 <span class="hero-badge px-3 py-1 d-inline-block mb-3">Now booking new students</span>
-                <h1 class="display-4 mb-3">Confident readers start here.</h1>
+                <h1 class="display-4 mb-3">Nurturing the reader in every child.</h1>
                 <p class="lead mb-4">
                     One-on-one literacy and math tutoring rooted in the Science of Reading and
                     Orton-Gillingham. Personalized, multisensory sessions that help your child
@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="col-lg-5 text-center">
-                <i class="bi bi-journal-bookmark-fill text-primary" style="font-size: 11rem; opacity:.85"></i>
+                <img src="~/images/logo.png" alt="Rooted Readers" class="img-fluid" style="max-width: 18rem; opacity:.95" />
             </div>
         </div>
     </div>
@@ -45,9 +45,7 @@
                         <h5 class="card-title">@service.Name</h5>
                         <p class="small text-muted flex-grow-1">@service.Tagline</p>
                         <div class="d-flex justify-content-between align-items-center mt-2">
-                            <span class="price-pill px-3 py-1 small">
-                                @(service.Price == 0 ? "Free" : service.Price.ToString("C0"))
-                            </span>
+                            <span class="price-pill px-3 py-1 small">@service.PriceDisplay</span>
                             <span class="small text-muted">@service.DurationMinutes min</span>
                         </div>
                         <a class="btn btn-outline-primary btn-sm mt-3"
@@ -67,10 +65,15 @@
             <div class="col-lg-6">
                 <h2>Meet Ms. Amani</h2>
                 <p>
-                    Ms. Amani holds a Bachelor's in Elementary Education and a Master's
-                    in Special Education. After 13 years in the classroom, she launched
-                    Rooted Readers to give students the individualized, evidence-based
-                    literacy support they deserve.
+                    Ms. Amani is a Licensed Colorado Teacher and AMS Primary Certified educator
+                    with 20 years of tutoring experience and 3 years in the classroom. She founded
+                    Rooted Readers to give children ages 4–12 the individualized, evidence-based
+                    literacy and math support they deserve.
+                </p>
+                <p>
+                    She has deep knowledge of Orton-Gillingham and LETRS — having trained under a
+                    certified practitioner and studied both curricula extensively — and is currently
+                    completing her AMS Lower Elementary credential.
                 </p>
                 <p class="mb-4">
                     She's trained in Orton-Gillingham+, the Institute for Multisensory Education's
@@ -81,10 +84,10 @@
             </div>
             <div class="col-lg-6">
                 <div class="row g-3">
-                    <div class="col-6"><div class="card p-3 text-center"><div class="display-6 text-primary">13+</div><div class="small text-muted">Years teaching</div></div></div>
-                    <div class="col-6"><div class="card p-3 text-center"><div class="display-6 text-primary">K-4</div><div class="small text-muted">Math grades served</div></div></div>
+                    <div class="col-6"><div class="card p-3 text-center"><div class="display-6 text-primary">18+</div><div class="small text-muted">Years tutoring</div></div></div>
+                    <div class="col-6"><div class="card p-3 text-center"><div class="display-6 text-primary">4-12</div><div class="small text-muted">Ages served</div></div></div>
                     <div class="col-6"><div class="card p-3 text-center"><div class="display-6 text-primary">1:1</div><div class="small text-muted">Personalized sessions</div></div></div>
-                    <div class="col-6"><div class="card p-3 text-center"><div class="display-6 text-primary">OG</div><div class="small text-muted">Orton-Gillingham trained</div></div></div>
+                    <div class="col-6"><div class="card p-3 text-center"><div class="display-6 text-primary">AMS</div><div class="small text-muted">Montessori trained</div></div></div>
                 </div>
             </div>
         </div>

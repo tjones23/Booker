@@ -19,14 +19,12 @@
                         <div class="flex-grow-1">
                             <div class="d-flex justify-content-between align-items-start">
                                 <h4 class="mb-1">@service.Name</h4>
-                                <span class="price-pill px-3 py-1 small">
-                                    @(service.Price == 0 ? "Free" : service.Price.ToString("C0"))
-                                </span>
+                                <span class="price-pill px-3 py-1 small">@service.PriceDisplay</span>
                             </div>
                             <p class="text-muted mb-2">@service.Tagline</p>
                             <p class="small">@service.Description</p>
                             <div class="small text-muted mb-3">
-                                <i class="bi bi-clock me-1"></i>@service.DurationMinutes-minute session
+                                <i class="bi bi-clock me-1"></i>@service.CadenceDisplay
                             </div>
                             <div class="d-flex gap-2">
                                 <a class="btn btn-primary btn-sm"

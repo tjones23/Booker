@@ -1,0 +1,32 @@
+<svg width="460" height="300" viewBox="220 30 240 270" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>Rooted Readers</title>
+  <desc>A minimalist sage-green tree with two children seated on either side reading open books, above the wordmark "Rooted Readers".</desc>
+  <g transform="translate(220,30)">
+    <ellipse cx="120" cy="190" rx="118" ry="9" fill="#e8a87c" opacity="0.25"/>
+
+    <circle cx="120" cy="78" r="60" fill="#5b7f6e"/>
+    <circle cx="74" cy="100" r="34" fill="#5b7f6e"/>
+    <circle cx="166" cy="100" r="34" fill="#5b7f6e"/>
+    <circle cx="120" cy="118" r="40" fill="#5b7f6e"/>
+
+    <path d="M112,128 L110,186 Q110,189 113,189 L127,189 Q130,189 130,186 L128,128 Z" fill="#7a5c43"/>
+    <path d="M110,186 Q98,189 90,189 M130,186 Q142,189 150,189" stroke="#7a5c43" stroke-width="4" stroke-linecap="round" fill="none"/>
+
+    <g>
+      <path d="M52,189 Q52,160 72,160 Q92,160 92,189 Z" fill="#3f5d4f"/>
+      <circle cx="72" cy="150" r="13" fill="#3f5d4f"/>
+      <path d="M58,184 L72,178 L72,188 L58,189 Z" fill="#faf6ef" stroke="#3f5d4f" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M86,184 L72,178 L72,188 L86,189 Z" fill="#faf6ef" stroke="#3f5d4f" stroke-width="1.5" stroke-linejoin="round"/>
+      <line x1="72" y1="178" x2="72" y2="188" stroke="#3f5d4f" stroke-width="1.5"/>
+    </g>
+
+    <g>
+      <path d="M148,189 Q148,160 168,160 Q188,160 188,189 Z" fill="#3f5d4f"/>
+      <circle cx="168" cy="150" r="13" fill="#3f5d4f"/>
+      <path d="M154,184 L168,178 L168,188 L154,189 Z" fill="#faf6ef" stroke="#3f5d4f" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M182,184 L168,178 L168,188 L182,189 Z" fill="#faf6ef" stroke="#3f5d4f" stroke-width="1.5" stroke-linejoin="round"/>
+      <line x1="168" y1="178" x2="168" y2="188" stroke="#3f5d4f" stroke-width="1.5"/>
+    </g>
+  </g>
+  <text x="340" y="270" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="34" font-weight="500" fill="#3f5d4f">Rooted Readers</text>
+</svg>
