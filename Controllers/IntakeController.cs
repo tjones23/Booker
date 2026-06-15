@@ -51,8 +51,8 @@ public class IntakeController : Controller
         {
             await _email.SendAsync(new EmailMessage
             {
-                ToAddress = _emailOptions.ToAddress,
-                ToName = _emailOptions.ToName,
+                ToAddress = _emailOptions.BusinessAddress,
+                ToName = _emailOptions.BusinessName,
                 Subject = $"New family intake — {submission.ChildName}",
                 HtmlBody = BuildTutorEmailBody(submission),
                 ReplyToAddress = submission.Email,
@@ -73,8 +73,8 @@ public class IntakeController : Controller
                 ToName = submission.ParentName,
                 Subject = "We received your Rooted Readers intake form",
                 HtmlBody = BuildFamilyEmailBody(submission),
-                ReplyToAddress = _emailOptions.ToAddress,
-                ReplyToName = _emailOptions.ToName
+                ReplyToAddress = _emailOptions.BusinessAddress,
+                ReplyToName = _emailOptions.BusinessName
             });
         }
         catch (Exception ex)

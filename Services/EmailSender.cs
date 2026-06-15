@@ -15,9 +15,12 @@ public class EmailOptions
     public string FromAddress { get; set; } = "noreply@rootedreaders.com";
     public string FromName { get; set; } = "Rooted Readers Website";
 
-    /// <summary>Where intake notifications are delivered (Ms. Amani).</summary>
-    public string ToAddress { get; set; } = "hello@rootedreaders.com";
-    public string ToName { get; set; } = "Ms. Amani";
+    /// <summary>
+    /// The business mailbox (Ms. Amani). Receives intake/booking notifications and is
+    /// used as the Reply-To on confirmations sent to families.
+    /// </summary>
+    public string BusinessAddress { get; set; } = "hello@rootedreaders.com";
+    public string BusinessName { get; set; } = "Ms. Amani";
 
     public bool IsConfigured => !string.IsNullOrWhiteSpace(Host);
 }
