@@ -22,7 +22,17 @@ public class EmailOptions
     public string BusinessAddress { get; set; } = "hello@rootedreaders.com";
     public string BusinessName { get; set; } = "Ms. Amani";
 
+    /// <summary>Public phone number shown in email signatures.</summary>
+    public string BusinessPhone { get; set; } = "(970) 590-1067";
+
     public bool IsConfigured => !string.IsNullOrWhiteSpace(Host);
+}
+
+/// <summary>An image embedded inline in the message and referenced from the HTML via <c>cid:ContentId</c>.</summary>
+public class InlineImage
+{
+    public required string ContentId { get; init; }
+    public required string FilePath { get; init; }
 }
 
 public class EmailMessage
@@ -34,6 +44,8 @@ public class EmailMessage
     /// <summary>Optional Reply-To (e.g. so the tutor can reply straight to the family).</summary>
     public string? ReplyToAddress { get; init; }
     public string? ReplyToName { get; init; }
+    /// <summary>Images embedded inline and referenced from the HTML body via <c>cid:ContentId</c>.</summary>
+    public IReadOnlyList<InlineImage> InlineImages { get; init; } = Array.Empty<InlineImage>();
 }
 
 public interface IEmailSender
@@ -63,7 +75,18 @@ public class SmtpEmailSender : IEmailSender
         if (!string.IsNullOrWhiteSpace(message.ReplyToAddress))
             mime.ReplyTo.Add(new MailboxAddress(message.ReplyToName ?? "", message.ReplyToAddress));
 
-        mime.Body = new BodyBuilder { HtmlBody = message.HtmlBody }.ToMessageBody();
+        var bodyBuilder = new BodyBuilder { HtmlBody = message.HtmlBody };
+        foreach (var image in message.InlineImages)
+        {
+            if (!File.Exists(image.FilePath))
+            {
+                _logger.LogWarning("Inline image not found, skipping: {Path}", image.FilePath);
+                continue;
+            }
+            var resource = bodyBuilder.LinkedResources.Add(image.FilePath);
+            resource.ContentId = image.ContentId;
+        }
+        mime.Body = bodyBuilder.ToMessageBody();
 
         using var client = new SmtpClient();
         var socketOption = _opt.UseStartTls
@@ -93,9 +116,11 @@ public class LoggingEmailSender : IEmailSender
     public Task SendAsync(EmailMessage message, CancellationToken ct = default)
     {
         _logger.LogInformation(
-            "[Email not configured — would have sent]\n  To: {To} <{Addr}>\n  Subject: {Subject}\n  Reply-To: {Reply}\n{Body}",
+            "[Email not configured — would have sent]\n  To: {To} <{Addr}>\n  Subject: {Subject}\n  Reply-To: {Reply}\n  Inline images: {Images}\n{Body}",
             message.ToName, message.ToAddress, message.Subject,
-            message.ReplyToAddress ?? "(none)", message.HtmlBody);
+            message.ReplyToAddress ?? "(none)",
+            message.InlineImages.Count == 0 ? "(none)" : string.Join(", ", message.InlineImages.Select(i => i.ContentId)),
+            message.HtmlBody);
         return Task.CompletedTask;
     }
 }

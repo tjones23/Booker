@@ -14,15 +14,21 @@ public class BookingController : Controller
     private readonly IAvailabilityService _availability;
     private readonly IEmailSender _email;
     private readonly EmailOptions _emailOptions;
+    private readonly IWebHostEnvironment _env;
     private readonly ILogger<BookingController> _logger;
 
+    // Content-Id used to embed the company logo inline in the family confirmation email.
+    private const string LogoContentId = "rootedreaders-logo";
+
     public BookingController(AppDbContext db, IAvailabilityService availability,
-        IEmailSender email, EmailOptions emailOptions, ILogger<BookingController> logger)
+        IEmailSender email, EmailOptions emailOptions, IWebHostEnvironment env,
+        ILogger<BookingController> logger)
     {
         _db = db;
         _availability = availability;
         _email = email;
         _emailOptions = emailOptions;
+        _env = env;
         _logger = logger;
     }
 
@@ -126,8 +132,8 @@ public class BookingController : Controller
         {
             await _email.SendAsync(new EmailMessage
             {
-                ToAddress = booking.Email,
-                ToName = booking.ParentName,
+                ToAddress = _emailOptions.BusinessAddress,
+                ToName = _emailOptions.BusinessName,
                 Subject = $"New booking — {service.Name} for {booking.StudentName}",
                 HtmlBody = BuildTutorEmailBody(booking),
                 ReplyToAddress = _emailOptions.BusinessAddress,
@@ -142,14 +148,22 @@ public class BookingController : Controller
         // Confirm to the family; reply goes to Ms. Amani.
         try
         {
+            // Embed the company logo inline (cid:) so it renders in the signature.
+            var logoPath = Path.Combine(_env.WebRootPath, "images", "logo.png");
+            var hasLogo = System.IO.File.Exists(logoPath);
+
             await _email.SendAsync(new EmailMessage
             {
                 ToAddress = booking.Email,
                 ToName = booking.ParentName,
                 Subject = "Your Rooted Readers session is booked",
-                HtmlBody = BuildFamilyEmailBody(booking),
+                HtmlBody = BuildFamilyEmailBody(booking, hasLogo ? LogoContentId : null,
+                    _emailOptions.BusinessAddress, _emailOptions.BusinessPhone),
                 ReplyToAddress = _emailOptions.BusinessAddress,
-                ReplyToName = _emailOptions.BusinessName
+                ReplyToName = _emailOptions.BusinessName,
+                InlineImages = hasLogo
+                    ? new[] { new InlineImage { ContentId = LogoContentId, FilePath = logoPath } }
+                    : Array.Empty<InlineImage>()
             });
         }
         catch (Exception ex)
@@ -210,7 +224,7 @@ public class BookingController : Controller
         return sb.ToString();
     }
 
-    private static string BuildFamilyEmailBody(Booking b)
+    private static string BuildFamilyEmailBody(Booking b, string? logoCid, string email, string phone)
     {
         var firstName = b.ParentName.Split(' ').FirstOrDefault() ?? b.ParentName;
         var confirmed = b.Status == BookingStatus.Confirmed;
@@ -232,13 +246,51 @@ public class BookingController : Controller
                     <td style="padding:6px 10px;border:1px solid #e3efe9">{WebUtility.HtmlEncode(b.StartTime.ToString("dddd, MMMM d, yyyy 'at' h:mm tt"))}</td></tr>
               </table>
               <p>If anything changes or you have questions, just reply to this email — it comes straight to me.</p>
-              <p style="margin-top:24px">Warmly,<br/><strong>Ms. Amani</strong><br/>
-                 <span style="color:#5a7a6e;font-style:italic">Rooted Readers — Grounded in Science. Grown with Care.</span></p>
+              <p style="margin:24px 0 12px 0">Warmly,</p>
+              {BuildSignature(logoCid, email, phone)}
               <hr style="border:none;border-top:1px solid #e3efe9;margin:20px 0" />
               <p style="color:#7a9a8a;font-size:12px">
                 This is an automatic confirmation that your booking was received.
               </p>
             </div>
+            """;
+    }
+
+    /// <summary>
+    /// Email signature: company logo (embedded inline via cid:) alongside Ms. Amani's
+    /// name, tagline, email, and phone number. Falls back to a text-only block if the
+    /// logo could not be attached.
+    /// </summary>
+    private static string BuildSignature(string? logoCid, string email, string phone)
+    {
+        var encodedEmail = WebUtility.HtmlEncode(email);
+        var encodedPhone = WebUtility.HtmlEncode(phone);
+        var telHref = "+" + new string(phone.Where(char.IsDigit).ToArray());
+
+        var details = $"""
+            <div style="font-weight:bold;color:#0F6E56;font-size:15px">Ms. Amani</div>
+            <div style="color:#5a7a6e;font-style:italic;font-size:13px">Rooted Readers — Grounded in Science. Grown with Care.</div>
+            <div style="font-size:13px;margin-top:6px;color:#1a1a1a">
+              <a href="mailto:{encodedEmail}" style="color:#0F6E56;text-decoration:none">{encodedEmail}</a><br/>
+              <a href="tel:{telHref}" style="color:#0F6E56;text-decoration:none">{encodedPhone}</a>
+            </div>
+            """;
+
+        if (string.IsNullOrEmpty(logoCid))
+            return $"<div>{details}</div>";
+
+        return $"""
+            <table style="border-collapse:collapse">
+              <tr>
+                <td style="vertical-align:middle;padding-right:14px">
+                  <img src="cid:{logoCid}" width="72" height="72" alt="Rooted Readers"
+                       style="display:block;border-radius:8px" />
+                </td>
+                <td style="vertical-align:middle;border-left:2px solid #9FE1CB;padding-left:14px">
+                  {details}
+                </td>
+              </tr>
+            </table>
             """;
     }
 }
