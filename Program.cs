@@ -1,15 +1,30 @@
 using Booker.Data;
 using Booker.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
+var connectionString = builder.Configuration.GetConnectionString("Default")
+                       ?? "Data Source=booker.db";
+
+// Ensure the directory for a file-based SQLite database exists. On Azure App
+// Service the database is pointed at /home (persistent storage) via the
+// ConnectionStrings__Default app setting, e.g. "Data Source=/home/data/booker.db".
+var dataSource = new SqliteConnectionStringBuilder(connectionString).DataSource;
+if (!string.IsNullOrEmpty(dataSource))
+{
+    var dbDirectory = Path.GetDirectoryName(Path.GetFullPath(dataSource));
+    if (!string.IsNullOrEmpty(dbDirectory))
+        Directory.CreateDirectory(dbDirectory);
+}
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("Default")
-                      ?? "Data Source=booker.db"));
+    options.UseSqlite(connectionString));
 
 // Business-hours configuration drives the availability calculator.
 builder.Services.AddSingleton(TimeProvider.System);
@@ -34,7 +49,18 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 builder.Services.AddAuthorization();
 
+// Honor X-Forwarded-* headers from Fly.io's proxy so the app knows requests
+// arrived over HTTPS (prevents an HTTPS-redirect loop behind the proxy).
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
 var app = builder.Build();
+
+app.UseForwardedHeaders();
 
 // Create and seed the SQLite database on startup (demo convenience).
 using (var scope = app.Services.CreateScope())
@@ -55,17 +81,15 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapStaticAssets();
+app.UseStaticFiles();
 
 app.MapControllerRoute(
     name: "services-details",
     pattern: "services/{slug}",
-    defaults: new { controller = "Services", action = "Details" })
-    .WithStaticAssets();
+    defaults: new { controller = "Services", action = "Details" });
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

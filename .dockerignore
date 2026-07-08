@@ -1,0 +1,11 @@
+bin/
+obj/
+.git/
+.vs/
+.vscode/
+.idea/
+*.user
+# Local SQLite database — the deployed app uses the persistent volume at /data
+booker.db
+booker.db-shm
+booker.db-wal

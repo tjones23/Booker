@@ -1,0 +1,30 @@
+# Fly.io configuration for Booker (ASP.NET Core 9 + SQLite).
+# `app` must be globally unique — `fly launch` will set/confirm it for you.
+app = "booker"
+primary_region = "iad"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  # Scale to zero when idle to stay within the free allowance; the proxy
+  # wakes the machine on the next request (brief cold start).
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+[env]
+  # SQLite lives on the persistent volume mounted below, so data survives
+  # restarts and redeploys.
+  ConnectionStrings__Default = "Data Source=/data/booker.db"
+
+# Persistent volume that holds the SQLite database file.
+[[mounts]]
+  source = "booker_data"
+  destination = "/data"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"
