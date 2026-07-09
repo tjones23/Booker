@@ -8,7 +8,7 @@
         <div class="row align-items-center g-4">
             <div class="col-lg-7">
                 <span class="hero-badge px-3 py-1 d-inline-block mb-3">Now booking new students</span>
-                <h1 class="display-4 mb-3">Nurturing the reader in every child.</h1>
+                <h1 class="display-4 mb-3">Nurturing the <span class="text-gradient">reader</span> in every child.</h1>
                 <p class="lead mb-4">
                     One-on-one literacy and math tutoring rooted in the Science of Reading and
                     Orton-Gillingham. Personalized, multisensory sessions that help your child
@@ -23,7 +23,7 @@
                     </a>
                 </div>
             </div>
-            <div class="col-lg-5 text-center">
+            <div class="col-lg-5 text-center hero-art">
                 <img src="~/images/logo.png" alt="Rooted Readers" class="img-fluid" style="max-width: 18rem; opacity:.95" />
             </div>
         </div>
@@ -32,13 +32,14 @@
 
 <section class="container my-5">
     <div class="text-center mb-4">
+        <span class="eyebrow">What we offer</span>
         <h2>Tutoring services</h2>
         <p class="text-muted">Pick the support that fits your family — book online in minutes.</p>
     </div>
     <div class="row g-4">
         @foreach (var service in Model.Services)
         {
-            <div class="col-md-6 col-lg-3">
+            <div class="col-md-6 col-lg-3 reveal">
                 <div class="card h-100 lift p-3">
                     <div class="card-body d-flex flex-column">
                         <span class="service-icon mb-3"><i class="bi bi-@service.Icon"></i></span>
@@ -63,6 +64,7 @@
     <div class="container">
         <div class="row align-items-center g-4">
             <div class="col-lg-6">
+                <span class="eyebrow">Your tutor</span>
                 <h2>Meet Ms. Amani</h2>
                 <p>
                     Ms. Amani is a Licensed Colorado Teacher and AMS Primary Certified educator
@@ -79,10 +81,10 @@
             </div>
             <div class="col-lg-6">
                 <div class="row g-3">
-                    <div class="col-6"><div class="card p-3 text-center"><div class="display-6 text-primary">18+</div><div class="small text-muted">Years tutoring</div></div></div>
-                    <div class="col-6"><div class="card p-3 text-center"><div class="display-6 text-primary">4-12</div><div class="small text-muted">Ages served</div></div></div>
-                    <div class="col-6"><div class="card p-3 text-center"><div class="display-6 text-primary">1:1</div><div class="small text-muted">Personalized sessions</div></div></div>
-                    <div class="col-6"><div class="card p-3 text-center"><div class="display-6 text-primary">AMS</div><div class="small text-muted">Montessori trained</div></div></div>
+                    <div class="col-6 reveal"><div class="card stat-card p-3 text-center"><div class="display-6">18+</div><div class="small text-muted">Years tutoring</div></div></div>
+                    <div class="col-6 reveal"><div class="card stat-card p-3 text-center"><div class="display-6">4-12</div><div class="small text-muted">Ages served</div></div></div>
+                    <div class="col-6 reveal"><div class="card stat-card p-3 text-center"><div class="display-6">1:1</div><div class="small text-muted">Personalized sessions</div></div></div>
+                    <div class="col-6 reveal"><div class="card stat-card p-3 text-center"><div class="display-6">AMS</div><div class="small text-muted">Montessori trained</div></div></div>
                 </div>
             </div>
         </div>
@@ -92,11 +94,14 @@
 @if (Model.Testimonials.Any())
 {
     <section class="container my-5">
-        <div class="text-center mb-4"><h2>What families say</h2></div>
+        <div class="text-center mb-4">
+            <span class="eyebrow">Testimonials</span>
+            <h2>What families say</h2>
+        </div>
         <div class="row g-4">
             @foreach (var t in Model.Testimonials)
             {
-                <div class="col-md-4">
+                <div class="col-md-4 reveal">
                     <div class="testimonial p-4 h-100 card lift">
                         <div class="stars mb-2">
                             @for (int i = 0; i < t.Rating; i++) { <i class="bi bi-star-fill"></i> }
@@ -114,9 +119,9 @@
 }
 
 <section class="container my-5">
-    <div class="card p-4 p-md-5 text-center bg-brand-soft">
+    <div class="cta-band p-4 p-md-5 text-center reveal">
         <h2 class="mb-2">Ready to get started?</h2>
-        <p class="text-muted mb-4">The free 30-minute assessment is the perfect first step — no obligation.</p>
+        <p class="mb-4">The free 30-minute assessment is the perfect first step — no obligation.</p>
         <div><a class="btn btn-primary btn-lg px-4" asp-controller="Booking" asp-action="Index">Book online now</a></div>
     </div>
 </section>

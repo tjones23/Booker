@@ -27,3 +27,37 @@
         document.querySelectorAll('input[type="tel"]').forEach(attach);
     });
 })();
+
+// Gentle scroll-reveal for elements marked with .reveal. The hidden state is only
+// applied once JS confirms it can undo it (body.reveal-ready), so content is never
+// stuck invisible without JS or IntersectionObserver support.
+(function () {
+    if (!("IntersectionObserver" in window)) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var els = document.querySelectorAll(".reveal");
+        if (!els.length) return;
+        document.body.classList.add("reveal-ready");
+
+        var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("reveal-in");
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { rootMargin: "0px 0px -8% 0px" });
+
+        els.forEach(function (el, i) {
+            // Stagger siblings that share a row so cards cascade in.
+            var siblingIndex = 0, prev = el.previousElementSibling;
+            while (prev) {
+                if (prev.classList.contains("reveal")) siblingIndex++;
+                prev = prev.previousElementSibling;
+            }
+            el.style.setProperty("--reveal-delay", Math.min(siblingIndex, 5) * 70 + "ms");
+            observer.observe(el);
+        });
+    });
+})();

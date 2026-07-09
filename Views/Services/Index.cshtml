@@ -5,6 +5,7 @@
 
 <section class="container my-5">
     <div class="text-center mb-5">
+        <span class="eyebrow">What we offer</span>
         <h1>Tutoring services</h1>
         <p class="text-muted">Evidence-based, one-on-one support tailored to your child.</p>
     </div>
@@ -12,7 +13,7 @@
     <div class="row g-4">
         @foreach (var service in Model)
         {
-            <div class="col-md-6">
+            <div class="col-md-6 reveal">
                 <div class="card h-100 p-4 lift">
                     <div class="d-flex align-items-start gap-3">
                         <span class="service-icon"><i class="bi bi-@service.Icon"></i></span>
