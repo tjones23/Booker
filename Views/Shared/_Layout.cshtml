@@ -13,7 +13,7 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
     <header>
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm sticky-top">
+        <nav class="navbar navbar-expand-lg navbar-light navbar-glass sticky-top">
             <div class="container">
                 <a class="navbar-brand fw-bold d-flex align-items-center lh-1 py-1" asp-controller="Home" asp-action="Index">
                     <img src="~/images/logo.png" alt="Rooted Readers" height="44" class="me-2" />
@@ -27,7 +27,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse" id="mainNav">
-                    <ul class="navbar-nav ms-auto align-items-md-center">
+                    <ul class="navbar-nav ms-auto align-items-lg-center">
                         <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
                         <li class="nav-item"><a class="nav-link" asp-controller="Services" asp-action="Index">Services</a></li>
                         <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">About</a></li>
@@ -42,7 +42,7 @@
                                 </form>
                             </li>
                         }
-                        <li class="nav-item ms-md-2">
+                        <li class="nav-item ms-lg-2 my-2 my-lg-0">
                             <a class="btn btn-primary px-3" asp-controller="Booking" asp-action="Index">Book a session</a>
                         </li>
                     </ul>
@@ -64,7 +64,7 @@
         @RenderBody()
     </main>
 
-    <footer class="footer mt-auto py-4 bg-dark text-light">
+    <footer class="footer mt-auto py-5 text-light">
         <div class="container">
             <div class="row gy-3">
                 <div class="col-md-5">
