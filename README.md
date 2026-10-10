@@ -100,6 +100,60 @@ dotnet user-secrets set "Email:Password" "your-app-password"
 In production, set the same keys as environment variables, e.g.
 `Email__ToAddress=...` (double underscore = nested config).
 
+## Running and hosting (`run-dev.command` / `run-prod.command`)
+
+Two launchers, in the style of Outside and WhatsGood. Double-click either in
+Finder for a menu, or run them from a terminal (`./run-prod.command help` lists
+every command). Both share `scripts/run-common.sh` and the app's port, **5080**
+(not 5000: AirPlay Receiver has that on Monterey and later), so either can see
+and stop what the other started.
+
+- **`run-dev.command`**: `dotnet watch` with hot reload, the Development
+  environment, `./booker.db`, and user secrets.
+- **`run-prod.command`**: the published Release build (in `.booker/publish`),
+  with settings and secrets from `.env` and the database in `~/booker-data`.
+  It can host on this network, on the tailnet, or publicly, at
+  **https://rootedreaders.haddock-sunfish.ts.net**.
+
+Booker gets its own Tailscale node, `rootedreaders`: a userspace `tailscaled`
+that only these scripts run, separate from the Mac's own Tailscale. Tailscale
+terminates HTTPS and proxies to `127.0.0.1:5080`. Public access uses
+[Funnel](https://tailscale.com/kb/1223/funnel), so nothing is opened on the router.
+
+### First time on the server Mac
+
+1. **Install the prerequisites:** the [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+   and `tailscaled` (`brew install tailscale`, or
+   `go install tailscale.com/cmd/tailscale{,d}@latest` if Homebrew won't install it).
+   Only run the binary; never `brew services start` it.
+2. **Settings:** `cp .env.example .env` and fill it in. The scripts won't make
+   the site public while the admin password is still the demo one.
+3. **Tailnet:** in the [admin console](https://login.tailscale.com/admin), MagicDNS
+   and HTTPS certificates must be on, and the policy must grant `funnel` (the
+   default policy does).
+4. Then:
+
+   ```bash
+   ./run-prod.command setup     # once: lets hosting keep a closed-lid Mac awake (asks for your password)
+   ./run-prod.command rebuild   # publish the Release build
+   ./run-prod.command public    # first run prints a login URL for the "rootedreaders" node
+   ```
+
+5. In the admin console, **disable key expiry** for `rootedreaders`. Otherwise the
+   site drops off when the node's key expires.
+
+### Day to day
+
+- **Ship new code:** `git pull && ./run-prod.command rebuild`. The build is
+  published beside the running one and swapped in only once it succeeds, so a
+  failed build doesn't interrupt the site. If the new build won't start, the
+  previous one is put back.
+- **Check on it:** `./run-prod.command status` / `logs`
+- **Go private:** `public off` keeps the site on the tailnet only. `stop`
+  withdraws it everywhere.
+
+After a reboot, the site stays down until `./run-prod.command public` is run again.
+
 ## Notes / next steps for production
 
 - Replace the demo admin login with **ASP.NET Core Identity**

@@ -49,8 +49,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 builder.Services.AddAuthorization();
 
-// Honor X-Forwarded-* headers from Fly.io's proxy so the app knows requests
-// arrived over HTTPS (prevents an HTTPS-redirect loop behind the proxy).
+// Honor X-Forwarded-* headers from the HTTPS proxy in front of the app (Tailscale
+// Funnel, or Fly.io's proxy) so it knows requests arrived over HTTPS — secure
+// cookies, HSTS, and no HTTPS-redirect loop behind the proxy.
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
