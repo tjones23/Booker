@@ -487,3 +487,12 @@ $RECYCLE.BIN/
 booker.db
 booker.db-shm
 booker.db-wal
+
+# Launchers (run-dev.command / run-prod.command): settings, logs, state, builds
+.env*
+!.env.example
+/server.log
+/build.log
+/server.pid
+/mode
+/.booker/
