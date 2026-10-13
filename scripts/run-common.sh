@@ -546,6 +546,24 @@ ts_public() {
     grep -q "\"$host:$TS_HTTPS_PORT\"[[:space:]]*:[[:space:]]*true"
 }
 
+# Can the internet actually find this node's public name? Funnel being on
+# locally isn't enough: Tailscale's control plane has to publish the public
+# DNS record too, and it has been seen not to. Asks public resolvers
+# directly, so a MagicDNS answer on this Mac can't vouch for it. Returns 2
+# when no resolver could be asked at all (offline, or no dig).
+ts_public_dns_ok() {
+  local host="${1:-$(ts_hostname)}" resolver answer asked=""
+  [ -n "$host" ] || return 1
+  command -v dig >/dev/null 2>&1 || return 2
+  for resolver in 1.1.1.1 8.8.8.8; do
+    answer="$(dig +short +time=2 +tries=1 "$host" A "@$resolver" 2>/dev/null)" || continue
+    asked=1
+    printf '%s\n' "$answer" | grep -Eq '^[0-9]+(\.[0-9]+){3}$' && return 0
+  done
+  [ -n "$asked" ] || return 2
+  return 1
+}
+
 # Turn off public ingress for this app's port, leaving the private tailnet
 # listener (if any) alone. `serve`/`funnel off` on some Tailscale versions
 # also drops the plain tailnet listener; callers that want to stay on the
@@ -908,6 +926,15 @@ status() {
   if is_running; then
     ok "Web server running ($(mode_label "$mode")) on port $PORT — pid $(listeners | tr '\n' ' ')"
     print_urls
+    if ts_public; then
+      ts_public_dns_ok
+      case $? in
+        0) say "  ${DIM}public DNS: resolves${RESET}" ;;
+        1) warn "Public, but the internet can't find $(ts_hostname) yet — no public DNS record."
+           say "  ${DIM}Normal for ~10 minutes after going public. If it lasts longer: '$SELF public off' then '$SELF public'.${RESET}" ;;
+        *) say "  ${DIM}public DNS: couldn't check (offline, or no dig)${RESET}" ;;
+      esac
+    fi
   else
     say "Web server not running."
     local ts_url
