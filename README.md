@@ -1,10 +1,7 @@
 # Rooted Readers — Online Booking Site
 
 An ASP.NET Core 9 MVC web application for Rooted Readers, the reading-tutoring
-practice of Ms. Amani. It is inspired by
-[mrsalovesreading.com](https://www.mrsalovesreading.com). The marketing site that
-inspired this has **no online booking** (visitors must email or call) — so the
-headline feature here is a real, self-service **online booking system**.
+practice of Ms. Amani.
 
 ## Features
 
