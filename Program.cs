@@ -28,8 +28,14 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Business-hours configuration drives the availability calculator.
 builder.Services.AddSingleton(TimeProvider.System);
-builder.Services.AddSingleton(builder.Configuration
-    .GetSection("BusinessHours").Get<BusinessHoursOptions>() ?? new BusinessHoursOptions());
+var hoursSection = builder.Configuration.GetSection("BusinessHours");
+var businessHours = hoursSection.Get<BusinessHoursOptions>() ?? new BusinessHoursOptions();
+// Binding merges into the default schedule, so a day left out of config would keep
+// its default hours. When config supplies a schedule, treat it as the complete week.
+var scheduleSection = hoursSection.GetSection("Schedule");
+if (scheduleSection.Exists())
+    businessHours.Schedule = scheduleSection.Get<Dictionary<DayOfWeek, DayHours>>() ?? new();
+builder.Services.AddSingleton(businessHours);
 builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
 
 // Email: use SMTP when a host is configured, otherwise log the message (dev-friendly).

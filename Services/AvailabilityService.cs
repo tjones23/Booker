@@ -51,6 +51,36 @@ public class BusinessHoursOptions
 
     /// <summary>Minimum lead time before a session can be booked.</summary>
     public int MinLeadTimeHours { get; set; } = 12;
+
+    /// <summary>
+    /// Human-readable hours, Monday first, with consecutive days that share the
+    /// same window collapsed (e.g. "Mon–Fri, 4:30 PM – 6:00 PM"). Closed days are omitted.
+    /// </summary>
+    public List<string> DescribeHours()
+    {
+        var week = new[]
+        {
+            DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday,
+            DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Sunday,
+        };
+        var lines = new List<string>();
+        var i = 0;
+        while (i < week.Length)
+        {
+            if (!Schedule.TryGetValue(week[i], out var hours)) { i++; continue; }
+            var j = i;
+            while (j + 1 < week.Length
+                   && Schedule.TryGetValue(week[j + 1], out var next)
+                   && next.Open == hours.Open && next.Close == hours.Close)
+                j++;
+            var days = i == j ? Abbrev(week[i]) : $"{Abbrev(week[i])}–{Abbrev(week[j])}";
+            lines.Add($"{days}, {hours.Open:h:mm tt} – {hours.Close:h:mm tt}");
+            i = j + 1;
+        }
+        return lines;
+    }
+
+    private static string Abbrev(DayOfWeek day) => day.ToString()[..3];
 }
 
 public class AvailabilityService : IAvailabilityService
